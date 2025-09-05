@@ -1,2 +1,0 @@
-# Lolos
-App de finanzas

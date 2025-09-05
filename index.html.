@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas Lolos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #4F4D51;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+        .input-group label {
+            font-weight: 500;
+            color: #4F4D51;
+        }
+        .input-group input, .input-group select {
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #E0F029;
+            box-shadow: 0 0 0 3px rgba(224, 240, 41, 0.2);
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background-color: #E0F029;
+            color: #000000;
+        }
+        .btn-primary:hover {
+            background-color: #c9d824;
+        }
+        .btn-secondary {
+            background-color: #E55582;
+            color: #FFFFFF;
+        }
+        .btn-secondary:hover {
+            background-color: #d14a72;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #f7fafc;
+        }
+        .list-item:nth-child(odd) {
+            background-color: #edf2f7;
+        }
+        .delete-btn {
+            background-color: #e53e3e;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .delete-btn:hover {
+            background-color: #c53030;
+        }
+        .chart-container {
+            height: 300px;
+            width: 100%;
+            margin-top: 24px;
+            position: relative;
+        }
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-link.active {
+            background-color: #E0F029;
+            color: #000000;
+        }
+        .nav-link:not(.active):hover {
+            background-color: #e2e8f0;
+        }
+        .category-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #FFFFFF;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .modal-close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .modal-close:hover,
+        .modal-close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .nav-responsive {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        @media (min-width: 768px) {
+            .nav-responsive {
+                flex-wrap: nowrap;
+            }
+        }
+    </style>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9wbGFjZWhvbGQuY28vMTkyP3RleHQ9TFwiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIn0seyJzcmMiOiJodHRwczovL3BsYWNlaG9sZC5jby81MTI/dGV4dD1MViIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV0sIm5hbWUiOiJGaW5hbnphcyBMb2xvcyIsInNob3J0X25hbWUiOiJGaW5hbnphcyIsImRpc3BsYXkiOiJzdGFuZGxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzAwMDAwMCIsInRoZW1lX2NvbG9yIjoiI0UwRjAyOSJ9">
+</head>
+<body class="bg-gray-100 p-6 flex flex-col items-center min-h-screen">
+    <div class="container mx-auto p-4 md:p-8 space-y-8">
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800">Finanzas Lolos</h1>
+        <!-- Navegación -->
+        <nav class="nav-responsive">
+            <a href="#" id="nav-inicio" class="nav-link active" data-page="inicio">Inicio</a>
+            <a href="#" id="nav-diario" class="nav-link" data-page="diario">Diario</a>
+            <a href="#" id="nav-presupuesto" class="nav-link" data-page="presupuesto">Presupuesto</a>
+            <a href="#" id="nav-explorar" class="nav-link" data-page="explorar">Buscar</a>
+        </nav>
+
+        <!-- Contenedor de Páginas -->
+        <div id="page-container" class="space-y-8">
+            <!-- Página de Inicio -->
+            <div id="page-inicio" class="card space-y-8">
+                <!-- Sección de configuración de usuario -->
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Configuración</h2>
+                    <div class="input-group">
+                        <label for="user-name" class="block mb-1">Mi Nombre</label>
+                        <input type="text" id="user-name" placeholder="Ej: Sofía" class="w-full">
+                    </div>
+                    <p class="text-sm text-gray-500">
+                        **Tu ID de usuario:** <span id="user-id" class="font-mono text-xs">Cargando...</span>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        Comparte este ID con tu pareja para que puedan ver los mismos datos.
+                    </p>
+                    <button id="reset-app-btn" class="btn btn-secondary w-full">Reiniciar Aplicación</button>
+                </div>
+                
+                <!-- Sección del Dashboard -->
+                <div id="dashboard" class="space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2 md:mb-0">Dashboard</h2>
+                        <button id="toggle-view-btn" class="btn btn-secondary">Cambiar a Vista Compartida</button>
+                    </div>
+                    
+                    <div id="personal-view-container" class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-700">Tu Vista</h3>
+                        <div class="chart-container">
+                            <canvas id="personal-canvas"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div id="shared-view-container" class="space-y-4 hidden">
+                        <h3 class="text-xl font-semibold text-gray-700">Vista Compartida</h3>
+                        <div class="chart-container">
+                            <canvas id="shared-canvas"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Gráfico de Tendencia (Últimos 3 meses) -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-700">Tendencia de Ingresos y Gastos</h3>
+                        <div class="chart-container">
+                             <canvas id="monthly-trend-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico Acumulado -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-700">Flujo de Dinero Acumulado</h3>
+                        <div class="chart-container">
+                             <canvas id="cumulative-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Página de Ingreso Diario -->
+            <div id="page-diario" class="card space-y-6 hidden">
+                <h2 class="text-2xl font-bold text-gray-800">Registros Diarios (Real)</h2>
+                <div class="input-group">
+                    <label for="real-description" class="block mb-1">Descripción</label>
+                    <input type="text" id="real-description" placeholder="Salario recibido, gasto real, etc." class="w-full">
+                </div>
+                <div class="input-group">
+                    <label for="real-amount" class="block mb-1">Monto ($)</label>
+                    <input type="number" id="real-amount" placeholder="Ej: 1550000" class="w-full">
+                </div>
+                <div class="input-group">
+                    <label for="real-author" class="block mb-1">Autor del movimiento</label>
+                    <select id="real-author" class="w-full"></select>
+                </div>
+                <div class="input-group">
+                    <label for="real-type" class="block mb-1">Tipo</label>
+                    <select id="real-type" class="w-full">
+                        <option value="ingreso">Ingreso</option>
+                        <option value="gasto">Gasto</option>
+                        <option value="deuda">Deuda</option>
+                    </select>
+                </div>
+                <!-- Categorías, subcategorías y comentarios -->
+                <div id="real-categories-section" class="input-group">
+                    <label for="real-category" class="block mb-1">Categoría</label>
+                    <div class="category-input-group">
+                        <select id="real-category" class="flex-1"></select>
+                        <input type="text" id="real-category-input" placeholder="Nueva categoría" class="flex-1 hidden">
+                        <input type="text" id="real-icon-input" placeholder="Icono (ej: 🏠)" class="w-1/4">
+                    </div>
+                </div>
+                <div id="real-subcategories-section" class="input-group hidden">
+                    <label for="real-subcategory" class="block mb-1">Subcategoría (opcional)</label>
+                    <select id="real-subcategory" class="w-full"></select>
+                    <input type="text" id="real-subcategory-input" placeholder="Nueva subcategoría" class="w-full mt-2 hidden">
+                </div>
+                <div class="input-group">
+                    <label for="real-comments" class="block mb-1">Comentarios (opcional)</label>
+                    <input type="text" id="real-comments" placeholder="Ej: Cuota de auto, regalo de cumpleaños" class="w-full">
+                </div>
+
+                <div class="input-group">
+                    <label for="real-percentage" class="block mb-1">Mi Porcentaje de Contribución (%)</label>
+                    <input type="number" id="real-percentage" value="50" min="0" max="100" class="w-full">
+                    <p class="text-xs text-gray-500 mt-1">Tu porcentaje. El resto es de tu pareja.</p>
+                </div>
+                <div class="input-group">
+                    <label for="real-recurrence" class="block mb-1">Recurrencia</label>
+                    <select id="real-recurrence" class="w-full">
+                        <option value="once">Una sola vez</option>
+                        <option value="monthly">Mensual</option>
+                        <option value="quarterly">Trimestral</option>
+                    </select>
+                </div>
+                <div id="real-installments-group" class="input-group hidden">
+                    <label for="real-installments" class="block mb-1">Número de cuotas</label>
+                    <input type="number" id="real-installments" min="1" class="w-full">
+                </div>
+                <div class="input-group">
+                    <label for="real-date" class="block mb-1">Fecha</label>
+                    <input type="date" id="real-date" class="w-full">
+                </div>
+                <button id="add-real" class="btn btn-primary w-full">Agregar Registro Real</button>
+                <div id="real-list" class="space-y-3 mt-6"></div>
+            </div>
+
+            <!-- Página de Presupuesto -->
+            <div id="page-presupuesto" class="card space-y-6 hidden">
+                <h2 class="text-2xl font-bold text-gray-800">Presupuesto (Planificado)</h2>
+                <div class="input-group">
+                    <label for="budget-description" class="block mb-1">Descripción</label>
+                    <input type="text" id="budget-description" placeholder="Arriendo, Salario, etc." class="w-full">
+                </div>
+                <div class="input-group">
+                    <label for="budget-amount" class="block mb-1">Monto ($)</label>
+                    <input type="number" id="budget-amount" placeholder="Ej: 500000" class="w-full">
+                </div>
+                <div class="input-group">
+                    <label for="budget-author" class="block mb-1">Autor del movimiento</label>
+                    <select id="budget-author" class="w-full"></select>
+                </div>
+                <div class="input-group">
+                    <label for="budget-type" class="block mb-1">Tipo</label>
+                    <select id="budget-type" class="w-full">
+                        <option value="ingreso">Ingreso</option>
+                        <option value="gasto">Gasto</option>
+                        <option value="deuda">Deuda</option>
+                    </select>
+                </div>
+                <!-- Categorías, subcategorías y comentarios -->
+                <div id="budget-categories-section" class="input-group">
+                    <label for="budget-category" class="block mb-1">Categoría</label>
+                    <div class="category-input-group">
+                        <select id="budget-category" class="flex-1"></select>
+                        <input type="text" id="budget-category-input" placeholder="Nueva categoría" class="flex-1 hidden">
+                        <input type="text" id="budget-icon-input" placeholder="Icono (ej: 🚗)" class="w-1/4">
+                    </div>
+                </div>
+                <div id="budget-subcategories-section" class="input-group hidden">
+                    <label for="budget-subcategory" class="block mb-1">Subcategoría (opcional)</label>
+                    <select id="budget-subcategory" class="w-full"></select>
+                    <input type="text" id="budget-subcategory-input" placeholder="Nueva subcategoría" class="w-full mt-2 hidden">
+                </div>
+                 <div class="input-group">
+                    <label for="budget-comments" class="block mb-1">Comentarios (opcional)</label>
+                    <input type="text" id="budget-comments" placeholder="Ej: Cuota de auto, regalo de cumpleaños" class="w-full">
+                </div>
+
+                <div class="input-group">
+                    <label for="budget-percentage" class="block mb-1">Mi Porcentaje de Contribución (%)</label>
+                    <input type="number" id="budget-percentage" value="50" min="0" max="100" class="w-full">
+                    <p class="text-xs text-gray-500 mt-1">Tu porcentaje. El resto es de tu pareja.</p>
+                </div>
+                <div class="input-group">
+                    <label for="budget-recurrence" class="block mb-1">Recurrencia</label>
+                    <select id="budget-recurrence" class="w-full">
+                        <option value="once">Una sola vez</option>
+                        <option value="monthly">Mensual</option>
+                        <option value="quarterly">Trimestral</option>
+                    </select>
+                </div>
+                <div id="budget-installments-group" class="input-group hidden">
+                    <label for="budget-installments" class="block mb-1">Número de cuotas</label>
+                    <input type="number" id="budget-installments" min="1" class="w-full">
+                </div>
+                <div class="input-group">
+                    <label for="budget-date" class="block mb-1">Fecha</label>
+                    <input type="date" id="budget-date" class="w-full">
+                </div>
+                <button id="add-budget" class="btn btn-primary w-full">Agregar a Presupuesto</button>
+                <div id="budget-list" class="space-y-3 mt-6"></div>
+            </div>
+
+            <!-- Página de Explorar -->
+            <div id="page-explorar" class="card space-y-6 hidden">
+                <h2 class="text-2xl font-bold text-gray-800">Buscar Movimientos</h2>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label for="filter-type" class="block text-sm font-medium text-gray-700">Tipo</label>
+                            <select id="filter-type" class="w-full mt-1">
+                                <option value="all">Todos</option>
+                                <option value="ingreso">Ingreso</option>
+                                <option value="gasto">Gasto</option>
+                                <option value="deuda">Deuda</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filter-user" class="block text-sm font-medium text-gray-700">Autor</label>
+                            <select id="filter-user" class="w-full mt-1"></select>
+                        </div>
+                        <div>
+                            <label for="filter-start-date" class="block text-sm font-medium text-gray-700">Fecha Desde</label>
+                            <input type="date" id="filter-start-date" class="w-full mt-1">
+                        </div>
+                        <div>
+                            <label for="filter-end-date" class="block text-sm font-medium text-gray-700">Fecha Hasta</label>
+                            <input type="date" id="filter-end-date" class="w-full mt-1">
+                        </div>
+                        <div id="filter-category-div" class="hidden">
+                            <label for="filter-category" class="block text-sm font-medium text-gray-700">Categoría</label>
+                            <select id="filter-category" class="w-full mt-1"></select>
+                        </div>
+                        <div id="filter-subcategory-div" class="hidden">
+                            <label for="filter-subcategory" class="block text-sm font-medium text-gray-700">Subcategoría</label>
+                            <select id="filter-subcategory" class="w-full mt-1"></select>
+                        </div>
+                    </div>
+                </div>
+                <div id="explore-list" class="space-y-3 mt-6"></div>
+            </div>
+        </div>
+        
+        <!-- Botones de Herramientas -->
+        <div class="flex justify-center space-x-4 mt-8">
+            <button id="show-import-modal" class="btn btn-secondary text-sm md:text-base">Importar</button>
+            <button id="show-export-modal" class="btn btn-secondary text-sm md:text-base">Exportar</button>
+        </div>
+    </div>
+
+    <!-- Modal para mensajes -->
+    <div id="message-modal" class="modal hidden">
+        <div class="modal-content text-center">
+            <p id="modal-message" class="text-lg font-semibold text-gray-800"></p>
+            <button id="close-message-modal" class="mt-4 btn btn-secondary">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal para Importar CSV -->
+    <div id="import-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-import-modal" class="modal-close">&times;</span>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Importar CSV</h2>
+            <p class="text-sm text-gray-600 mb-4">Sube un archivo CSV. Formato: <code>tipo,monto,descripcion,porcentaje</code> (ej: <code>ingreso,1500000,Salario,100</code>).</p>
+            <input type="file" id="csv-file-input" accept=".csv" class="w-full mb-4">
+            <button id="import-csv-btn" class="btn btn-primary w-full">Importar</button>
+        </div>
+    </div>
+
+    <!-- Modal para Exportar CSV -->
+    <div id="export-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-export-modal" class="modal-close">&times;</span>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Exportar a CSV</h2>
+            <p class="text-sm text-gray-600 mb-4">Genera un archivo CSV con todos tus datos financieros.</p>
+            <button id="export-csv-btn" class="btn btn-primary w-full">Exportar</button>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación de reinicio -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-confirm-modal" class="modal-close">&times;</span>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">¿Estás seguro de que quieres reiniciar la aplicación?</h2>
+            <p class="text-sm text-gray-600 mb-4">Esta acción eliminará todos los datos de forma permanente. Para continuar, por favor, escribe "Reiniciar" abajo.</p>
+            <input type="text" id="confirm-input" placeholder="Escribe Reiniciar" class="w-full mb-4">
+            <div class="flex justify-end space-x-2">
+                <button id="cancel-confirm" class="btn btn-secondary">Cancelar</button>
+                <button id="confirm-reset" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <script>
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4ge2V2ZW50LnNraXBXYWl0aW5nKCk7fSk7c2VsZi5hZGRFdmVudExpc3RlbmVyKCdhY3RpdmF0ZScsIGV2ZW50ID0+IHtldmVudC5jbGFpbWVudHMoKTt9KTtzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZXZlbnQgPT4ge30pOw==')
+                .then(reg => console.log('Service Worker registrado con éxito', reg))
+                .catch(err => console.log('Fallo el registro del Service Worker', err));
+        }
+
+        // Variables globales proporcionadas por el entorno.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        db.settings({ experimentalForceLongPolling: true });
+        let userId = '';
+        let userName = 'Usuario Anónimo';
+        let allRecords = [];
+        let allCategories = [];
+        let allSubcategories = [];
+        let allAuthors = [];
+        let viewMode = 'personal';
+
+        // Referencias a elementos del DOM
+        const pages = ['inicio', 'diario', 'presupuesto', 'explorar'];
+        const pageElements = Object.fromEntries(pages.map(id => [`page-${id}`, document.getElementById(`page-${id}`)]));
+        const navLinks = Object.fromEntries(pages.map(id => [`nav-${id}`, document.getElementById(`nav-${id}`)]));
+
+        const userNameInput = document.getElementById('user-name');
+        const userIdSpan = document.getElementById('user-id');
+        
+        const budgetDescriptionInput = document.getElementById('budget-description');
+        const budgetAmountInput = document.getElementById('budget-amount');
+        const budgetAuthorSelect = document.getElementById('budget-author');
+        const budgetCategorySelect = document.getElementById('budget-category');
+        const budgetCategoryInput = document.getElementById('budget-category-input');
+        const budgetSubcategorySection = document.getElementById('budget-subcategories-section');
+        const budgetSubcategorySelect = document.getElementById('budget-subcategory');
+        const budgetSubcategoryInput = document.getElementById('budget-subcategory-input');
+        const budgetIconInput = document.getElementById('budget-icon-input');
+        const budgetTypeSelect = document.getElementById('budget-type');
+        const budgetCommentsInput = document.getElementById('budget-comments');
+        const budgetPercentageInput = document.getElementById('budget-percentage');
+        const budgetRecurrenceSelect = document.getElementById('budget-recurrence');
+        const budgetInstallmentsGroup = document.getElementById('budget-installments-group');
+        const budgetInstallmentsInput = document.getElementById('budget-installments');
+        const budgetDateInput = document.getElementById('budget-date');
+        const addBudgetBtn = document.getElementById('add-budget');
+        const budgetList = document.getElementById('budget-list');
+        
+        const realDescriptionInput = document.getElementById('real-description');
+        const realAmountInput = document.getElementById('real-amount');
+        const realAuthorSelect = document.getElementById('real-author');
+        const realCategorySelect = document.getElementById('real-category');
+        const realCategoryInput = document.getElementById('real-category-input');
+        const realSubcategorySection = document.getElementById('real-subcategories-section');
+        const realSubcategorySelect = document.getElementById('real-subcategory');
+        const realSubcategoryInput = document.getElementById('real-subcategory-input');
+        const realIconInput = document.getElementById('real-icon-input');
+        const realTypeSelect = document.getElementById('real-type');
+        const realCommentsInput = document.getElementById('real-comments');
+        const realPercentageInput = document.getElementById('real-percentage');
+        const realRecurrenceSelect = document.getElementById('real-recurrence');
+        const realInstallmentsGroup = document.getElementById('real-installments-group');
+        const realInstallmentsInput = document.getElementById('real-installments');
+        const realDateInput = document.getElementById('real-date');
+        const addRealBtn = document.getElementById('add-real');
+        const realList = document.getElementById('real-list');
+
+        const exploreList = document.getElementById('explore-list');
+        const filterTypeSelect = document.getElementById('filter-type');
+        const filterUserSelect = document.getElementById('filter-user');
+        const filterStartDateInput = document.getElementById('filter-start-date');
+        const filterEndDateInput = document.getElementById('filter-end-date');
+        const filterCategorySelect = document.getElementById('filter-category');
+        const filterCategoryDiv = document.getElementById('filter-category-div');
+        const filterSubcategorySelect = document.getElementById('filter-subcategory');
+        const filterSubcategoryDiv = document.getElementById('filter-subcategory-div');
+
+        const toggleViewBtn = document.getElementById('toggle-view-btn');
+        const personalViewContainer = document.getElementById('personal-view-container');
+        const sharedViewContainer = document.getElementById('shared-view-container');
+        const personalCanvas = document.getElementById('personal-canvas');
+        const sharedCanvas = document.getElementById('shared-canvas');
+        const monthlyTrendCanvas = document.getElementById('monthly-trend-chart');
+        const cumulativeCanvas = document.getElementById('cumulative-chart');
+
+        const showImportModalBtn = document.getElementById('show-import-modal');
+        const showExportModalBtn = document.getElementById('show-export-modal');
+        const importModal = document.getElementById('import-modal');
+        const exportModal = document.getElementById('export-modal');
+        const messageModal = document.getElementById('message-modal');
+        const confirmModal = document.getElementById('confirm-modal');
+        
+        const closeImportModalBtn = document.getElementById('close-import-modal');
+        const closeExportModalBtn = document.getElementById('close-export-modal');
+        const closeMessageModalBtn = document.getElementById('close-message-modal');
+        const closeConfirmModalBtn = document.getElementById('close-confirm-modal');
+        const importCsvBtn = document.getElementById('import-csv-btn');
+        const csvFileInput = document.getElementById('csv-file-input');
+        const exportCsvBtn = document.getElementById('export-csv-btn');
+
+        const resetAppBtn = document.getElementById('reset-app-btn');
+        const confirmInput = document.getElementById('confirm-input');
+        const cancelConfirmBtn = document.getElementById('cancel-confirm');
+        const confirmResetBtn = document.getElementById('confirm-reset');
+
+
+        // Navegación de páginas
+        function showPage(pageId) {
+            pages.forEach(id => {
+                pageElements[`page-${id}`].classList.add('hidden');
+            });
+            pageElements[`page-${pageId}`].classList.remove('hidden');
+
+            const allNavLinks = document.querySelectorAll('.nav-link');
+            allNavLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`[data-page="${pageId}"]`);
+            if (activeLink) {
+                 activeLink.classList.add('active');
+            }
+
+            if (pageId === 'inicio') {
+                renderDashboard();
+            } else if (pageId === 'explorar') {
+                renderExploreList();
+            }
+        }
+        
+        // Manejador de eventos para navegación
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('.nav-link');
+            if (link) {
+                e.preventDefault();
+                showPage(link.dataset.page);
+            }
+        });
+
+        // Lógica de Modales
+        showImportModalBtn.addEventListener('click', () => importModal.classList.remove('hidden'));
+        closeImportModalBtn.addEventListener('click', () => importModal.classList.add('hidden'));
+        showExportModalBtn.addEventListener('click', () => exportModal.classList.remove('hidden'));
+        closeExportModalBtn.addEventListener('click', () => exportModal.classList.add('hidden'));
+        closeMessageModalBtn.addEventListener('click', () => messageModal.classList.add('hidden'));
+        closeConfirmModalBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
+        cancelConfirmBtn.addEventListener('click', () => confirmModal.classList.add('hidden'));
+
+        // Mostrar mensaje modal
+        function showMessage(message) {
+            modalMessage.textContent = message;
+            messageModal.classList.remove('hidden');
+        }
+
+        // Autenticación de usuario
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                userId = user.uid;
+                userIdSpan.textContent = userId;
+                console.log("Usuario autenticado. ID:", userId);
+                // Cargar el nombre de usuario desde Firestore si existe
+                const userDocRef = db.collection(`artifacts/${appId}/users/${userId}/data`).doc('profile');
+                const userDoc = await userDocRef.get();
+                if (userDoc.exists) {
+                    userName = userDoc.data().name;
+                    userNameInput.value = userName;
+                }
+                
+                await initializeDataListeners();
+            } else {
+                try {
+                    if (initialAuthToken) {
+                        await auth.signInWithCustomToken(initialAuthToken);
+                    } else {
+                        await auth.signInAnonymously();
+                        userId = auth.currentUser.uid;
+                        userIdSpan.textContent = userId;
+                    }
+                    console.log("Autenticación exitosa.");
+                } catch (error) {
+                    console.error("Error al autenticar:", error);
+                    showMessage("Error al iniciar sesión. Por favor, inténtalo de nuevo.");
+                }
+            }
+        });
+
+        // Manejar cambios en el nombre de usuario y guardarlo
+        userNameInput.addEventListener('input', async (e) => {
+            userName = e.target.value.trim() || 'Usuario Anónimo';
+            if (userId && userName !== 'Usuario Anónimo') {
+                const userDocRef = db.collection(`artifacts/${appId}/users/${userId}/data`).doc('profile');
+                await userDocRef.set({ name: userName });
+            }
+        });
+
+        // Función para inicializar los listeners de Firestore
+        async function initializeDataListeners() {
+            if (!userId) {
+                console.log("No hay ID de usuario. Saltando la inicialización de listeners.");
+                return;
+            }
+            
+            // Listener para todos los registros en la colección pública
+            db.collection(`artifacts/${appId}/public/data/finances`).onSnapshot((snapshot) => {
+                allRecords = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderItems();
+                renderDashboard();
+                renderExploreList(); // Actualiza la vista de explorar también
+                renderAuthors(); // Actualiza el filtro de autores
+            }, (error) => {
+                console.error("Error al escuchar los datos:", error);
+                showMessage("Error al cargar los datos. Por favor, revisa tu conexión.");
+            });
+
+            // Listener para categorías
+            db.collection(`artifacts/${appId}/public/data`).doc('categories').onSnapshot((doc) => {
+                allCategories = doc.exists ? doc.data().list : [];
+                renderCategories();
+            }, (error) => {
+                console.error("Error al escuchar las categorías:", error);
+            });
+            
+            // Listener para subcategorías
+            db.collection(`artifacts/${appId}/public/data`).doc('subcategories').onSnapshot((doc) => {
+                allSubcategories = doc.exists ? doc.data().list : [];
+                renderSubcategories();
+            }, (error) => {
+                console.error("Error al escuchar las subcategorías:", error);
+            });
+        }
+        
+        // Renderizar las categorías en los select
+        function renderCategories() {
+            const categories = [{name: 'Seleccionar o crear', icon: ''}, ...allCategories];
+            realCategorySelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.icon} ${c.name}</option>`).join('');
+            budgetCategorySelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.icon} ${c.name}</option>`).join('');
+            filterCategorySelect.innerHTML = `<option value="all">Todas</option>` + allCategories.map(c => `<option value="${c.name}">${c.icon} ${c.name}</option>`).join('');
+        }
+        
+        // Renderizar las subcategorías en los select
+        function renderSubcategories() {
+            const subcategories = [{name: 'Seleccionar o crear'}, ...allSubcategories];
+            realSubcategorySelect.innerHTML = subcategories.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+            budgetSubcategorySelect.innerHTML = subcategories.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+            filterSubcategorySelect.innerHTML = `<option value="all">Todas</option>` + allSubcategories.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+        }
+
+        // Renderizar los autores en los select de la página de ingreso y explorar
+        function renderAuthors() {
+            const authors = allRecords.reduce((acc, curr) => {
+                if (!acc.some(u => u.name === curr.author)) {
+                    acc.push({ name: curr.author });
+                }
+                return acc;
+            }, [{ name: userName }]); // Incluir al usuario actual por defecto
+            
+            const realAuthorOptions = authors.map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+            realAuthorSelect.innerHTML = realAuthorOptions;
+            realAuthorSelect.value = userName; // Seleccionar el nombre del usuario actual por defecto
+            
+            const budgetAuthorOptions = authors.map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+            budgetAuthorSelect.innerHTML = budgetAuthorOptions;
+            budgetAuthorSelect.value = userName;
+            
+            filterUserSelect.innerHTML = `<option value="all">Todos</option>` + authors.map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+        }
+
+        // Mostrar u ocultar el input de nueva categoría
+        realCategorySelect.addEventListener('change', () => {
+            if (realCategorySelect.value === 'Seleccionar o crear') {
+                realCategoryInput.classList.remove('hidden');
+                realIconInput.classList.remove('hidden');
+                realCategoryInput.focus();
+            } else {
+                realCategoryInput.classList.add('hidden');
+                realIconInput.classList.add('hidden');
+            }
+        });
+        budgetCategorySelect.addEventListener('change', () => {
+            if (budgetCategorySelect.value === 'Seleccionar o crear') {
+                budgetCategoryInput.classList.remove('hidden');
+                budgetIconInput.classList.remove('hidden');
+                budgetCategoryInput.focus();
+            } else {
+                budgetCategoryInput.classList.add('hidden');
+                budgetIconInput.classList.add('hidden');
+            }
+        });
+        
+        // Mostrar u ocultar el campo de subcategoría dependiendo del tipo de movimiento
+        realTypeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'gasto') {
+                realSubcategorySection.classList.remove('hidden');
+            } else {
+                realSubcategorySection.classList.add('hidden');
+            }
+        });
+
+        budgetTypeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'gasto') {
+                budgetSubcategorySection.classList.remove('hidden');
+            } else {
+                budgetSubcategorySection.classList.add('hidden');
+            }
+        });
+        
+        // Mostrar u ocultar el campo de número de cuotas si la recurrencia es mensual o trimestral
+        realRecurrenceSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'monthly' || e.target.value === 'quarterly') {
+                realInstallmentsGroup.classList.remove('hidden');
+            } else {
+                realInstallmentsGroup.classList.add('hidden');
+            }
+        });
+
+        budgetRecurrenceSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'monthly' || e.target.value === 'quarterly') {
+                budgetInstallmentsGroup.classList.remove('hidden');
+            } else {
+                budgetInstallmentsGroup.classList.add('hidden');
+            }
+        });
+
+
+        // Mostrar u ocultar el input de nueva subcategoría
+        realSubcategorySelect.addEventListener('change', (e) => {
+            if (e.target.value === 'Seleccionar o crear') {
+                realSubcategoryInput.classList.remove('hidden');
+                realSubcategoryInput.focus();
+            } else {
+                realSubcategoryInput.classList.add('hidden');
+            }
+        });
+        budgetSubcategorySelect.addEventListener('change', (e) => {
+            if (e.target.value === 'Seleccionar o crear') {
+                budgetSubcategoryInput.classList.remove('hidden');
+                budgetSubcategoryInput.focus();
+            } else {
+                budgetSubcategoryInput.classList.add('hidden');
+            }
+        });
+
+        // Función para renderizar items
+        function renderItems() {
+            const myBudgetItems = allRecords.filter(item => item.addedByUserId === userId && item.type === 'presupuesto').sort((a,b) => b.addedAt - a.addedAt);
+            const myRealItems = allRecords.filter(item => item.addedByUserId === userId && item.type === 'real').sort((a,b) => b.addedAt - a.addedAt);
+            
+            budgetList.innerHTML = '';
+            myBudgetItems.forEach(item => {
+                const itemDiv = createItemElement(item);
+                budgetList.appendChild(itemDiv);
+            });
+
+            realList.innerHTML = '';
+            myRealItems.forEach(item => {
+                const itemDiv = createItemElement(item);
+                realList.appendChild(itemDiv);
+            });
+        }
+
+        function createItemElement(item) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'list-item';
+            const date = item.addedAt ? new Date(item.addedAt).toLocaleDateString() : 'N/A';
+            const icon = allCategories.find(c => c.name === item.category)?.icon || '';
+            const subcategoryText = item.subcategory ? `<span class="text-sm text-gray-600 block">Subcategoría: ${item.subcategory}</span>` : '';
+            const commentsText = item.comments ? `<span class="text-sm text-gray-600 block">Comentarios: ${item.comments}</span>` : '';
+
+            const content = `
+                <div class="flex-1">
+                    <span class="font-medium">${item.description}</span>
+                    <span class="text-sm text-gray-600 block">
+                        Monto: $${item.amount.toLocaleString('es-CL')} |
+                        Categoría: ${icon} ${item.category} |
+                        Autor: ${item.author}
+                    </span>
+                    ${subcategoryText}
+                    ${commentsText}
+                    <span class="text-xs text-gray-400 block mt-1">
+                        Ingresado por: ${item.addedByName} el ${date}
+                    </span>
+                </div>
+                <button class="delete-btn" data-id="${item.id}" data-user-id="${item.addedByUserId}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            `;
+            itemDiv.innerHTML = content;
+            return itemDiv;
+        }
+
+        // Renderiza la lista de explorar con filtros
+        function renderExploreList() {
+            const filteredRecords = allRecords.filter(item => {
+                const typeMatch = filterTypeSelect.value === 'all' || item.type === filterTypeSelect.value;
+                const userMatch = filterUserSelect.value === 'all' || item.author === filterUserSelect.value;
+                const categoryMatch = filterCategorySelect.value === 'all' || item.category === filterCategorySelect.value;
+                const subcategoryMatch = filterSubcategorySelect.value === 'all' || item.subcategory === filterSubcategorySelect.value;
+                const dateMatch = (!filterStartDateInput.value || new Date(item.addedAt) >= new Date(filterStartDateInput.value)) &&
+                                  (!filterEndDateInput.value || new Date(item.addedAt) <= new Date(filterEndDateInput.value));
+                return typeMatch && userMatch && categoryMatch && subcategoryMatch && dateMatch;
+            }).sort((a,b) => b.addedAt - a.addedAt);
+
+            exploreList.innerHTML = '';
+            if(filteredRecords.length === 0){
+                exploreList.innerHTML = '<p class="text-center text-gray-500">No se encontraron movimientos con los filtros seleccionados.</p>';
+            }
+            filteredRecords.forEach(item => {
+                const itemDiv = createItemElement(item);
+                exploreList.appendChild(itemDiv);
+            });
+        }
+        filterTypeSelect.addEventListener('change', () => {
+             if (filterTypeSelect.value === 'gasto' || filterTypeSelect.value === 'all') {
+                filterCategoryDiv.classList.remove('hidden');
+                filterSubcategoryDiv.classList.remove('hidden');
+             } else {
+                filterCategoryDiv.classList.add('hidden');
+                filterSubcategoryDiv.classList.add('hidden');
+             }
+             renderExploreList();
+        });
+        filterUserSelect.addEventListener('change', renderExploreList);
+        filterStartDateInput.addEventListener('change', renderExploreList);
+        filterEndDateInput.addEventListener('change', renderExploreList);
+        filterCategorySelect.addEventListener('change', renderExploreList);
+        filterSubcategorySelect.addEventListener('change', renderExploreList);
+
+
+        // Renderizar el Dashboard
+        function renderDashboard() {
+            const dataToRender = viewMode === 'personal' ? 
+                allRecords.filter(item => item.author === userName) :
+                allRecords;
+            
+            const realData = dataToRender.filter(item => item.type === 'real');
+            const monthlyData = calculateMonthlyData(realData);
+
+            // Gráfico 1: Ingresos vs Gastos
+            renderCategoryChart(personalCanvas, realData.filter(d => d.author === userName));
+            renderCategoryChart(sharedCanvas, realData);
+
+            // Gráfico 2: Tendencia Mensual
+            renderMonthlyTrendChart(monthlyTrendCanvas, monthlyData);
+
+            // Gráfico 3: Flujo Acumulado
+            renderCumulativeChart(cumulativeCanvas, monthlyData);
+        }
+
+        function calculateMonthlyData(data) {
+            const monthlyTotals = {};
+            data.forEach(item => {
+                const date = new Date(item.addedAt);
+                const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
+                if (!monthlyTotals[monthYear]) {
+                    monthlyTotals[monthYear] = { incomes: 0, expenses: 0, balance: 0, date };
+                }
+                if (item.type === 'ingreso') {
+                    monthlyTotals[monthYear].incomes += item.amount;
+                } else {
+                    monthlyTotals[monthYear].expenses += item.amount;
+                }
+                monthlyTotals[monthYear].balance = monthlyTotals[monthYear].incomes - monthlyTotals[monthYear].expenses;
+            });
+            return Object.values(monthlyTotals).sort((a, b) => a.date - b.date);
+        }
+
+        // Renderiza el gráfico de categorías (Circular)
+        function renderCategoryChart(canvas, data) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const totals = data.reduce((acc, item) => {
+                const key = item.category || (item.subcategory || 'Sin Categoría');
+                acc[key] = (acc[key] || 0) + item.amount;
+                return acc;
+            }, {});
+
+            const labels = Object.keys(totals);
+            const amounts = Object.values(totals);
+            const totalSum = amounts.reduce((sum, val) => sum + val, 0);
+            
+            if (totalSum === 0) {
+                 ctx.font = '16px Inter';
+                 ctx.textAlign = 'center';
+                 ctx.fillStyle = '#4F4D51';
+                 ctx.fillText('No hay datos para mostrar', canvas.width / 2, canvas.height / 2);
+                 return;
+            }
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) * 0.7;
+            let currentAngle = 0;
+
+            const colors = ['#E0F029', '#E55582', '#4F4D51', '#FFFFFF'];
+            
+            labels.forEach((label, i) => {
+                const sliceAngle = (amounts[i] / totalSum) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+
+                // Dibuja la etiqueta
+                const labelX = centerX + (radius * 0.8) * Math.cos(currentAngle + sliceAngle / 2);
+                const labelY = centerY + (radius * 0.8) * Math.sin(currentAngle + sliceAngle / 2);
+                
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#4F4D51';
+                ctx.fillText(`${labels[i]}`, labelX, labelY);
+
+                currentAngle += sliceAngle;
+            });
+
+            // Dibuja la leyenda
+            const legendX = centerX + radius + 20;
+            let legendY = centerY - (labels.length * 12) / 2;
+            ctx.font = '12px Inter';
+            labels.forEach((label, i) => {
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fillRect(legendX, legendY, 10, 10);
+                ctx.fillStyle = '#4F4D51';
+                ctx.fillText(`${label}`, legendX + 15, legendY + 9);
+                legendY += 20;
+            });
+        }
+
+        // Renderiza el gráfico de tendencia mensual
+        function renderMonthlyTrendChart(canvas, data) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const today = new Date();
+            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+
+            const months = [lastMonth, currentMonth, nextMonth];
+            const labels = months.map(d => d.toLocaleString('es-ES', { month: 'short', year: 'numeric' }));
+            
+            const relevantData = data.filter(d => {
+                const date = d.date;
+                return (date.getFullYear() === lastMonth.getFullYear() && date.getMonth() === lastMonth.getMonth()) ||
+                       (date.getFullYear() === currentMonth.getFullYear() && date.getMonth() === currentMonth.getMonth()) ||
+                       (date.getFullYear() === nextMonth.getFullYear() && date.getMonth() === nextMonth.getMonth());
+            });
+
+            const allAmounts = relevantData.flatMap(m => [m.incomes, m.expenses]);
+            const maxY = allAmounts.length > 0 ? Math.max(...allAmounts) : 1000;
+            const barWidth = 30;
+            const gap = 20;
+            const chartHeight = canvas.height - 40;
+            const chartWidth = canvas.width;
+            const scaleY = chartHeight / maxY;
+            const xOffset = (chartWidth - (labels.length * (2 * barWidth + gap))) / 2;
+
+            if (allAmounts.length === 0 || maxY === 0) {
+                 ctx.font = '16px Inter';
+                 ctx.textAlign = 'center';
+                 ctx.fillStyle = '#4F4D51';
+                 ctx.fillText('No hay datos para mostrar', chartWidth / 2, canvas.height / 2);
+                 return;
+            }
+
+            labels.forEach((label, i) => {
+                const monthData = relevantData.find(d => d.date.getFullYear() === months[i].getFullYear() && d.date.getMonth() === months[i].getMonth()) || {incomes: 0, expenses: 0};
+                const incomeHeight = monthData.incomes * scaleY;
+                const expensesHeight = monthData.expenses * scaleY;
+                const x = xOffset + i * (2 * barWidth + gap);
+
+                ctx.fillStyle = '#E0F029'; // Ingresos
+                ctx.fillRect(x, canvas.height - 20 - incomeHeight, barWidth, incomeHeight);
+                ctx.fillStyle = '#E55582'; // Gastos
+                ctx.fillRect(x + barWidth, canvas.height - 20 - expensesHeight, barWidth, expensesHeight);
+                
+                ctx.fillStyle = '#4F4D51';
+                ctx.textAlign = 'center';
+                ctx.font = '12px Inter';
+                ctx.fillText(label, x + barWidth, canvas.height - 5);
+            });
+            
+            // Leyenda
+            ctx.fillStyle = '#4F4D51';
+            ctx.font = '12px Inter';
+            ctx.textAlign = 'left';
+            ctx.fillText('Ingresos', 10, 20);
+            ctx.fillStyle = '#E0F029';
+            ctx.fillRect(70, 10, 10, 10);
+            ctx.fillStyle = '#4F4D51';
+            ctx.fillText('Gastos', 10, 40);
+            ctx.fillStyle = '#E55582';
+            ctx.fillRect(70, 30, 10, 10);
+        }
+
+        // Renderiza el gráfico acumulado
+        function renderCumulativeChart(canvas, monthlyData) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (monthlyData.length === 0) {
+                 ctx.font = '16px Inter';
+                 ctx.textAlign = 'center';
+                 ctx.fillStyle = '#4F4D51';
+                 ctx.fillText('No hay datos para mostrar', canvas.width / 2, canvas.height / 2);
+                 return;
+            }
+
+            let cumulativeBalance = 0;
+            const cumulativePoints = monthlyData.map(m => {
+                cumulativeBalance += m.incomes - m.expenses;
+                return cumulativeBalance;
+            });
+            
+            const minBalance = Math.min(...cumulativePoints, 0);
+            const maxBalance = Math.max(...cumulativePoints, 0);
+            const totalRange = maxBalance - minBalance;
+
+            const chartHeight = canvas.height - 40;
+            const chartWidth = canvas.width;
+            const scaleY = chartHeight / totalRange;
+            const scaleX = chartWidth / (monthlyData.length > 1 ? monthlyData.length - 1 : 1);
+            const zeroY = chartHeight + minBalance * scaleY - 20;
+
+            // Dibuja la línea del cero
+            ctx.beginPath();
+            ctx.moveTo(0, zeroY);
+            ctx.lineTo(chartWidth, zeroY);
+            ctx.strokeStyle = '#a0aec0';
+            ctx.stroke();
+
+            // Dibuja la línea del gráfico
+            ctx.beginPath();
+            ctx.moveTo(0, zeroY - (cumulativePoints[0] * scaleY));
+            for (let i = 1; i < cumulativePoints.length; i++) {
+                const x = i * scaleX;
+                const y = zeroY - (cumulativePoints[i] * scaleY);
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = '#E0F029';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Dibuja los puntos
+            for (let i = 0; i < cumulativePoints.length; i++) {
+                const x = i * scaleX;
+                const y = zeroY - (cumulativePoints[i] * scaleY);
+                ctx.fillStyle = '#E0F029';
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+        }
+
+        // Event Listeners para agregar registros
+        const commonAddLogic = async (type, author, description, amount, category, subcategory, comments, percentage, recurrence, installments, date) => {
+            if (!userId) { showMessage("Por favor, espera a que el sistema se inicialice."); return false; }
+            if (!description || !amount || !date || !author) { showMessage("Por favor, ingresa los campos obligatorios."); return false; }
+            if (percentage < 0 || percentage > 100) { showMessage("El porcentaje debe estar entre 0 y 100."); return false; }
+            if ((type === 'ingreso' || type === 'deuda') && !category) { showMessage("Por favor, selecciona una categoría."); return false; }
+            if ((type === 'gasto') && !category) { showMessage("Por favor, selecciona una categoría para el gasto."); return false; }
+
+            // Guardar nueva categoría y subcategoría si no existen
+            const categoryExists = allCategories.some(c => c.name === category);
+            if (!categoryExists && category) {
+                const categoriesDocRef = db.collection(`artifacts/${appId}/public/data`).doc('categories');
+                const icon = (type === 'gasto' && realIconInput.value.trim()) || (type === 'ingreso' && budgetIconInput.value.trim()) || '💰';
+                allCategories.push({ name: category, icon });
+                await categoriesDocRef.set({ list: allCategories });
+            }
+            
+            if (subcategory) {
+                const subcategoryExists = allSubcategories.some(s => s.name === subcategory);
+                if (!subcategoryExists) {
+                    const subcategoriesDocRef = db.collection(`artifacts/${appId}/public/data`).doc('subcategories');
+                    allSubcategories.push({ name: subcategory });
+                    await subcategoriesDocRef.set({ list: allSubcategories });
+                }
+            }
+            
+            // Validar cuotas si es recurrente
+            if ((recurrence === 'monthly' || recurrence === 'quarterly') && (!installments || installments < 1)) {
+                showMessage("Por favor, ingresa un número de cuotas válido (mayor que 0).");
+                return false;
+            }
+
+            try {
+                await db.collection(`artifacts/${appId}/public/data/finances`).add({ 
+                    author, description, amount, type, category, subcategory, comments, percentage, recurrence, installments: installments || null,
+                    addedByName: userName, addedByUserId: userId, addedAt: new Date(date).getTime()
+                });
+                showMessage(`Registro agregado con éxito por ${userName}.`);
+                return true;
+            } catch (error) {
+                console.error("Error al agregar registro:", error);
+                showMessage("Error al guardar el registro. Inténtalo de nuevo.");
+                return false;
+            }
+        };
+
+        addBudgetBtn.addEventListener('click', async () => {
+            const type = budgetTypeSelect.value;
+            let category = '';
+            let subcategory = '';
+
+            if (type === 'gasto') {
+                category = budgetCategorySelect.value === 'Seleccionar o crear' ? budgetCategoryInput.value.trim() : budgetCategorySelect.value;
+                subcategory = budgetSubcategorySelect.value === 'Seleccionar o crear' ? budgetSubcategoryInput.value.trim() : budgetSubcategorySelect.value;
+            } else {
+                category = budgetCategorySelect.value === 'Seleccionar o crear' ? budgetCategoryInput.value.trim() : budgetCategorySelect.value;
+            }
+            const author = budgetAuthorSelect.value;
+            const icon = budgetIconInput.value.trim();
+            const installments = (budgetRecurrenceSelect.value === 'monthly' || budgetRecurrenceSelect.value === 'quarterly') ? parseInt(budgetInstallmentsInput.value) : null;
+            
+            const success = await commonAddLogic(type, author, budgetDescriptionInput.value.trim(), parseFloat(budgetAmountInput.value), category, subcategory, budgetCommentsInput.value, parseFloat(budgetPercentageInput.value), budgetRecurrenceSelect.value, installments, budgetDateInput.value);
+            if (success) {
+                budgetDescriptionInput.value = '';
+                budgetAmountInput.value = '';
+                budgetCategoryInput.value = '';
+                budgetIconInput.value = '';
+                budgetSubcategoryInput.value = '';
+                budgetCommentsInput.value = '';
+                budgetPercentageInput.value = '50';
+                budgetDateInput.value = '';
+                budgetCategoryInput.classList.add('hidden');
+                budgetInstallmentsGroup.classList.add('hidden');
+            }
+        });
+
+        addRealBtn.addEventListener('click', async () => {
+            const type = realTypeSelect.value;
+            let category = '';
+            let subcategory = '';
+
+            if (type === 'gasto') {
+                category = realCategorySelect.value === 'Seleccionar o crear' ? realCategoryInput.value.trim() : realCategorySelect.value;
+                subcategory = realSubcategorySelect.value === 'Seleccionar o crear' ? realSubcategoryInput.value.trim() : realSubcategorySelect.value;
+            } else {
+                category = realCategorySelect.value === 'Seleccionar o crear' ? realCategoryInput.value.trim() : realCategorySelect.value;
+            }
+            const author = realAuthorSelect.value;
+            const icon = realIconInput.value.trim();
+            const installments = (realRecurrenceSelect.value === 'monthly' || realRecurrenceSelect.value === 'quarterly') ? parseInt(realInstallmentsInput.value) : null;
+
+            const success = await commonAddLogic(type, author, realDescriptionInput.value.trim(), parseFloat(realAmountInput.value), category, subcategory, realCommentsInput.value, parseFloat(realPercentageInput.value), realRecurrenceSelect.value, installments, realDateInput.value);
+            if (success) {
+                realDescriptionInput.value = '';
+                realAmountInput.value = '';
+                realCategoryInput.value = '';
+                realIconInput.value = '';
+                realSubcategoryInput.value = '';
+                realCommentsInput.value = '';
+                realPercentageInput.value = '50';
+                realDateInput.value = '';
+                realCategoryInput.classList.add('hidden');
+                realInstallmentsGroup.classList.add('hidden');
+            }
+        });
+
+        // Importar CSV
+        importCsvBtn.addEventListener('click', () => {
+            const file = csvFileInput.files[0];
+            if (!file) {
+                showMessage("Por favor, selecciona un archivo CSV para importar.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const text = e.target.result;
+                const rows = text.trim().split('\n');
+                
+                let importCount = 0;
+                for (const row of rows) {
+                    const [type, author, amountStr, description, percentageStr, category, subcategory, comments] = row.split(',').map(s => s.trim());
+                    const amount = parseFloat(amountStr);
+                    const percentage = parseFloat(percentageStr);
+
+                    if (!isNaN(amount) && amount > 0 && !isNaN(percentage)) {
+                        try {
+                            await db.collection(`artifacts/${appId}/public/data/finances`).add({ 
+                                author, description, amount, type, category: category || '', subcategory: subcategory || '', comments: comments || '', percentage, recurrence: 'once',
+                                addedByName: userName, addedByUserId: userId, addedAt: Date.now()
+                            });
+                            importCount++;
+                        } catch (error) {
+                            console.error("Error al importar fila:", row, error);
+                        }
+                    }
+                }
+                showMessage(`Importación finalizada. Se agregaron ${importCount} registros.`);
+                csvFileInput.value = '';
+            };
+            reader.readAsText(file);
+        });
+
+        // Exportar a CSV
+        exportCsvBtn.addEventListener('click', async () => {
+            if (!userId) { showMessage("Por favor, espera a que el sistema se inicialice."); return; }
+            try {
+                const data = allRecords.map(item => ({
+                    id: item.id,
+                    origen: item.type,
+                    autor: item.author,
+                    monto: item.amount,
+                    descripcion: item.description,
+                    porcentaje: item.percentage,
+                    recurrencia: item.recurrence,
+                    categoria: item.category,
+                    subcategoria: item.subcategory,
+                    comentarios: item.comments,
+                    ingresado_por: item.addedByName,
+                    ingresado_por_id: item.addedByUserId,
+                    fecha: item.addedAt ? new Date(item.addedAt).toISOString() : ''
+                }));
+                const csvHeader = ["id", "origen", "autor", "monto", "descripcion", "porcentaje", "recurrencia", "categoria", "subcategoria", "comentarios", "ingresado_por", "ingresado_por_id", "fecha"].join(",");
+                const csvRows = data.map(item => {
+                    return [
+                        `"${item.id}"`,
+                        `"${item.origen}"`,
+                        `"${item.autor}"`,
+                        `"${item.monto}"`,
+                        `"${item.descripcion.replace(/"/g, '""')}"`,
+                        `"${item.porcentaje}"`,
+                        `"${item.recurrencia}"`,
+                        `"${item.categoria.replace(/"/g, '""')}"`,
+                        `"${item.subcategoria.replace(/"/g, '""')}"`,
+                        `"${item.comentarios.replace(/"/g, '""')}"`,
+                        `"${item.ingresado_por.replace(/"/g, '""')}"`,
+                        `"${item.ingresado_por_id}"`,
+                        `"${item.fecha}"`
+                    ].join(",");
+                });
+                const csvString = `${csvHeader}\n${csvRows.join("\n")}`;
+                const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'finanzas_lolos.csv');
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showMessage("Datos exportados a finanzas_lolos.csv");
+            } catch (error) {
+                console.error("Error al exportar a CSV:", error);
+                showMessage("Error al exportar los datos. Inténtalo de nuevo.");
+            }
+        });
+
+        // Alternar vistas del dashboard
+        toggleViewBtn.addEventListener('click', () => {
+            if (viewMode === 'personal') {
+                viewMode = 'shared';
+                personalViewContainer.classList.add('hidden');
+                sharedViewContainer.classList.remove('hidden');
+                toggleViewBtn.textContent = 'Cambiar a Tu Vista';
+            } else {
+                viewMode = 'personal';
+                sharedViewContainer.classList.add('hidden');
+                personalViewContainer.classList.remove('hidden');
+                toggleViewBtn.textContent = 'Cambiar a Vista Compartida';
+            }
+            renderDashboard();
+        });
+
+        // Manejar clics para eliminar elementos
+        document.body.addEventListener('click', async (event) => {
+            const button = event.target.closest('.delete-btn');
+            if (button) {
+                if (!userId) { showMessage("Por favor, espera a que el sistema se inicialice."); return; }
+                const recordId = button.dataset.id;
+                const recordUserId = button.dataset.userId;
+                
+                if (recordUserId !== userId) {
+                    showMessage("Solo puedes eliminar tus propios registros.");
+                    return;
+                }
+
+                try {
+                    await db.collection(`artifacts/${appId}/public/data/finances`).doc(recordId).delete();
+                    showMessage(`Registro eliminado con éxito.`);
+                } catch (error) {
+                    console.error(`Error al eliminar el registro:`, error);
+                    showMessage("Error al eliminar el elemento. Inténtalo de nuevo.");
+                }
+            }
+        });
+        
+        // Lógica de Reinicio de la aplicación
+        resetAppBtn.addEventListener('click', () => {
+            confirmModal.classList.remove('hidden');
+        });
+        
+        confirmResetBtn.addEventListener('click', async () => {
+            if (confirmInput.value === 'Reiniciar') {
+                confirmModal.classList.add('hidden');
+                showMessage("Reiniciando la aplicación...");
+                const collectionRef = db.collection(`artifacts/${appId}/public/data/finances`);
+                const categoriesRef = db.collection(`artifacts/${appId}/public/data`).doc('categories');
+                const subcategoriesRef = db.collection(`artifacts/${appId}/public/data`).doc('subcategories');
+
+                const querySnapshot = await collectionRef.get();
+                const deletePromises = querySnapshot.docs.map(d => d.ref.delete());
+                
+                await Promise.all(deletePromises);
+                await categoriesRef.delete();
+                await subcategoriesRef.delete();
+                
+                showMessage("¡Aplicación reiniciada con éxito! Todos los datos han sido eliminados.");
+            } else {
+                showMessage("Clave de seguridad incorrecta. Inténtalo de nuevo.");
+            }
+        });
+
+        // Inicializar la página de inicio al cargar
+        showPage('inicio');
+        // Poner la fecha actual en los inputs de fecha
+        const today = new Date().toISOString().slice(0, 10);
+        realDateInput.value = today;
+        budgetDateInput.value = today;
+    </script>
+</body>
+</html>
+
